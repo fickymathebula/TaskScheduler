@@ -1,0 +1,76 @@
+﻿@model TaskScheduler.Models.task
+
+@{
+    ViewBag.Title = "Add Task";
+
+    var assignedto = @ViewBag.AssignedTo;
+    var capturedby = @ViewBag.CreatedBy;
+        
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+
+            // This is to keep drop down values constant
+            $("#createdbyid").val(@capturedby);
+            $("#assignedtoid").val(@assignedto);                       
+        });
+
+    </script>
+}
+
+<h2>Add Task</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.createdbyid, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select id="createdbyid" name="createdbyid" asp-for="createdbyid" class="form-control">
+                    <option value="0">- Select User -</option>
+                    @foreach (var users in ViewBag.Users)
+                    {
+                        <option value="@users.id">@users.firstname @users.lastname</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.assignedtoid, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select id="assignedtoid" name="assignedtoid" asp-for="assignedtoid" class="form-control">
+                    <option value="0">- Select User -</option>
+                    @foreach (var users in ViewBag.Users)
+                    {
+                        <option value="@users.id">@users.firstname @users.lastname</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.taskdescription, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.taskdescription, new { htmlAttributes = new { @class = "form-control"} })                
+            </div>
+
+        </div>
+
+       
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

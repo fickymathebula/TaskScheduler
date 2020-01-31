@@ -1,0 +1,102 @@
+﻿@model IEnumerable<TaskScheduler.Models.task>
+
+@{
+    ViewBag.Title = "Task List";
+    var selectedUser = ViewBag.SelectedUser;
+
+    <script type="text/javascript">
+         jQuery(document).ready(function () {
+
+            // This is to keep drop down values constant
+            $("#drUsers").val(@selectedUser);                    
+         });
+
+        function assignCapturer() {
+            var userId = $("#drUsers").val();
+            $("#userid").val(userId);     
+        }
+
+    </script>
+}
+
+<h2>Task List</h2>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-sm-4">
+            <p>List tasks for this user</p>
+        </div>
+        <div class="col-sm-4">
+            <select class="form-control" id="drUsers">
+                <option value="0">- Select User -</option>
+                @foreach (var users in ViewBag.Users)
+                {
+                    <option value="@users.id">@users.firstname @users.lastname</option>
+                }
+            </select>
+            @Html.Hidden("userid")
+        </div>
+        <div class="col-sm-4">
+            <input type="submit" value="Load Tasks" class="btn btn-default" onclick="assignCapturer();" />
+        </div>
+    </div>
+</form>
+
+<br />
+@if (ViewBag.UserTasks != null)
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.createdbyid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.assignedtoid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.taskdescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.createdate)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            string user = "";
+            <tr>
+                <td>
+                    @foreach (var users in ViewBag.Users)
+                    {
+                        if (users.id == item.createdbyid)
+                        {
+                            user = users.firstname + " " + users.lastname;
+                            break; // nothing else to do here, exit the loop
+                        }
+                    }
+                    
+                    @user
+
+                </td>
+                <td>
+                    @foreach (var users in ViewBag.Users)
+                    {
+                        if (users.id == item.assignedtoid)
+                        {
+                            user = users.firstname + " " + users.lastname;
+                            break; // nothing else to do here, exit the loop
+                        }
+                    }
+                    @user
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.taskdescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.createdate)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
